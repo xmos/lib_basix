@@ -86,11 +86,61 @@ Alternatively, the application can be programmed into flash memory for standalon
 
    xflash ./bin/app_basix.xe
 
+****************
+Shim control API
+****************
+
+The ``basix/shim.h`` header provides functions for configuring or disabling the
+shim control register on xcore-400 devices. It defines these operating modes:
+
+* ``SHIM_MODE_DISABLED``: disable the shim and connect pads directly to their ports.
+* ``SHIM_MODE_I3C``: configure the shim for I3C.
+* ``SHIM_MODE_SOUNDWIRE_MASTER`` and ``SHIM_MODE_SOUNDWIRE_SLAVE``: configure the
+  SoundWire role.
+
+The clock source can be selected with ``SHIM_CLOCK_SOC`` (PLL0) or
+``SHIM_CLOCK_DDR`` (the DDR controller).
+
+Enable the configuration port before calling the shim API. ``shim_enable``
+configures and applies the selected mode and clock. ``shim_disable`` selects the
+disabled mode; it does not disable the port itself.
+
+.. code-block:: C
+
+    #include <xs1.h>
+    #include <xcore/port.h>
+    #include <basix/shim.h>
+
+    void configure_shim(void)
+    {
+        const port_t p_shim_config = XS1_PORT_4C;
+        port_enable(p_shim_config);
+        shim_enable(SHIM_MODE_SOUNDWIRE_MASTER, SHIM_CLOCK_SOC, p_shim_config);
+        <Use the shim>
+        shim_disable(p_shim_config);
+        port_disable(p_shim_config);
+    }
+
+For timing-sensitive use, split configuration from application: call
+``shim_configure`` to shift in the selected mode and clock, then call
+``shim_latch`` when the configuration should be applied. Only one configuration
+may be pending, so call ``shim_latch`` before another ``shim_configure``.
+
+.. code-block:: C
+
+    const port_t p_shim_config = XS1_PORT_4C;
+    port_enable(p_shim_config);
+    shim_configure(SHIM_MODE_SOUNDWIRE_SLAVE, SHIM_CLOCK_DDR, p_shim_config);
+    /* Synchronize with the relevant clock here. */
+    shim_latch(p_shim_config);
+    port_disable(p_shim_config);
+
 *************
 API Reference
 *************
 
-Doxygen documentation
+Public declarations, parameters, and enum values are documented in the Doxygen
+comments in ``basix/shim.h`` and the other public headers.
 
 
 

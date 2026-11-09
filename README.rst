@@ -26,6 +26,7 @@ Features
 * Portable reference timer and delay APIs
 * Basic print support via ``basix/print.h``
 * C/XC compatibility definitions via ``basix/xccompat.h``
+* xcore-400 shim mode and clock control via ``basix/shim.h``
 * HAL support across XS and VX architectures
 
 ************

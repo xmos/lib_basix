@@ -6,6 +6,9 @@ project(tests)
 option(BASIX_BUILD_XC_TESTS "Build XS-only XC compatibility tests" OFF)
 
 add_subdirectory(test_basix_pass)
+if(APP_HW_TARGET STREQUAL "XK-EVK-XU416")
+  add_subdirectory(test_basix_shim)
+endif()
 add_subdirectory(test_basix_fail)
 
 if(BASIX_BUILD_XC_TESTS)

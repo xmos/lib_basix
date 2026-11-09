@@ -15,7 +15,7 @@ pipeline {
         )
         string(
             name: 'TOOLS_VERSION_VX',
-            defaultValue: '-j --repo arch_vx_slipgate -b master -a XTC 131',
+            defaultValue: '-j --repo arch_vx_slipgate -b master -a XTC 143',
             description: 'VX XTC tools version'
         )
         string(
@@ -87,7 +87,7 @@ pipeline {
                             withTools(params.TOOLS_VERSION_XS) {
                                 createVenv(reqFile: 'requirements.txt')
                                 withVenv {
-                                    runPytest("--level=${params.TEST_LEVEL}")
+                                    runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_shim.py")
                                 }
                             }
                         }
@@ -109,14 +109,18 @@ pipeline {
                 stage('Test VX') {
                     steps {
                         dir("${REPO_NAME}/tests") {
+                            // Clean needed from previous builds
                             sh "find . -name '*.xe' -delete"
+                            sh 'rm -rf build'
+                            // Build fresh VX firmware variants for the simulator tests.
                             xcoreBuild(
                                 toolsVersion: params.TOOLS_VERSION_VX,
-                                buildDir: 'build-vx',
+                                buildDir: 'build',
                                 cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU416 -DBASIX_BUILD_XC_TESTS=OFF',
                                 archiveBins: false
                             )
                             withTools(params.TOOLS_VERSION_VX) {
+                                sh 'cmake --build build --target test_basix_shim'
                                 createVenv(reqFile: 'requirements.txt')
                                 withVenv {
                                     runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_xc.py")
