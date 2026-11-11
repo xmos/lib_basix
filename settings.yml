@@ -3,7 +3,8 @@
 lib_name: lib_basix
 project: '{{lib_name}}'
 title: '{{lib_name}}: Basix library'
-version: 0.1.0
+version: 0.1.1
+license: xmos_public_v1
 
 documentation:
   exclude_patterns_path: doc/exclude_patterns.inc

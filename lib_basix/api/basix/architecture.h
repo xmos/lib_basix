@@ -8,7 +8,14 @@
 
 /** Reference timer frequency. An override must match the hardware configuration. */
 #ifndef BASIX_TIMER_HZ
-#define BASIX_TIMER_HZ 100000000U
+#include <timer.h>
+#if defined(VX_TIMER_HZ)
+#define BASIX_TIMER_HZ VX_TIMER_HZ
+#elif defined(XS1_TIMER_HZ)
+#define BASIX_TIMER_HZ XS1_TIMER_HZ
+#else
+#error "No toolchain timer frequency definition available"
+#endif
 #endif
 
 #if defined(__cplusplus) || defined(__XC__)

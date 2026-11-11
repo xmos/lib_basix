@@ -1,5 +1,5 @@
 set(LIB_NAME lib_basix)
-set(LIB_VERSION 0.1.0)
+set(LIB_VERSION 0.1.1)
 set(LIB_INCLUDES api)
 
 set(LIB_DEPENDENT_MODULES "")
