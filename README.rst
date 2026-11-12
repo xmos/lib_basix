@@ -5,11 +5,11 @@ lib_basix: Basix library
 ##############################
 
 :vendor: XMOS
-:version: 0.1.0
-:scope: General Use
+:version: 0.1.1
+:scope: General use
 :description: HAL and utility library
 :category: General purpose
-:keywords:
+:keywords: Utility
 :devices: xcore-200, xcore.ai
 
 *******

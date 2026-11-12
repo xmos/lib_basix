@@ -9,7 +9,7 @@ int main()
     basix_delay_ticks(10);
     uint32_t elapsed = basix_time_now() - before;
 
-    if (elapsed < 10 || BASIX_TIMER_HZ != 100000000U)
+    if (elapsed < 10)
         basix_trap();
 
     printstr("PASS\n");

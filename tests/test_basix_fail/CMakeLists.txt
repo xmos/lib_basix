@@ -9,7 +9,8 @@ if(NOT DEFINED APP_HW_TARGET)
   set(APP_HW_TARGET XK-EVK-XU316)
 endif()
 
-set(APP_COMPILER_FLAGS          -O3 -Wall)
+# The trap must remain active in release builds with assertions disabled.
+set(APP_COMPILER_FLAGS          -O3 -Wall -DNDEBUG)
 
 set(APP_DEPENDENT_MODULES       "lib_basix")
 
