@@ -35,6 +35,10 @@ uint32_t basix_time_now(void);
 /** Delay for the specified number of reference-clock ticks. */
 void basix_delay_ticks(uint32_t ticks);
 
+/** Delay for the specified number of milliseconds of the reference clock.
+ *  Asserts if the maximum supported delay (INT32_MAX ticks) is exceeded. */
+void basix_delay_milliseconds(uint32_t milliseconds);
+
 #if defined(__cplusplus) || defined(__XC__)
 }
 #endif
