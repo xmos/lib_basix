@@ -8,7 +8,7 @@ endif()
 
 set(APP_INCLUDES              src)
 
-set(APP_COMPILER_FLAGS        -g -O3 -report -fxscope)
+set(APP_COMPILER_FLAGS        -g -O3)
 
 set (APP_DEPENDENT_MODULES    "lib_basix")
 
