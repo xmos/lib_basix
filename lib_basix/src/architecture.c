@@ -28,8 +28,20 @@ void basix_delay_ticks(uint32_t ticks)
     hwtimer_free(timer);
 }
 
+void basix_delay_microseconds(uint32_t microseconds)
+{
+    xassert(microseconds <= INT32_MAX / (BASIX_TIMER_HZ / 1000000));
+    basix_delay_ticks(microseconds * (BASIX_TIMER_HZ / 1000000));
+}
+
 void basix_delay_milliseconds(uint32_t milliseconds)
 {
     xassert(milliseconds <= INT32_MAX / (BASIX_TIMER_HZ / 1000));
     basix_delay_ticks(milliseconds * (BASIX_TIMER_HZ / 1000));
+}
+
+void basix_delay_seconds(uint32_t seconds)
+{
+    xassert(seconds <= INT32_MAX / BASIX_TIMER_HZ);
+    basix_delay_ticks(seconds * BASIX_TIMER_HZ);
 }
