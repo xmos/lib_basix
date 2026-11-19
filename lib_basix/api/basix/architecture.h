@@ -32,7 +32,8 @@ void basix_trap(void) __attribute__((noreturn));
 /** Return the current reference-clock timestamp. */
 uint32_t basix_time_now(void);
 
-/** Delay for the specified number of reference-clock ticks. */
+/** Delay for the specified number of reference-clock ticks.
+ *  Asserts if no hardware timer is available. */
 void basix_delay_ticks(uint32_t ticks);
 
 /** Delay for the specified number of microseconds of the reference clock.

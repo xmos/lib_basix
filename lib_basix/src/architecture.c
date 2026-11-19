@@ -24,6 +24,7 @@ uint32_t basix_time_now(void)
 void basix_delay_ticks(uint32_t ticks)
 {
     hwtimer_t timer = hwtimer_alloc();
+    xassert(timer != 0);
     hwtimer_delay(timer, ticks);
     hwtimer_free(timer);
 }
