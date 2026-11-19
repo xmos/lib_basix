@@ -4,7 +4,8 @@ lib_basix change log
 UNRELEASED
 ----------
 
-  * ADDED:   basix_delay_milliseconds().
+  * ADDED:   basix_delay_microseconds(), basix_delay_milliseconds() and
+    basix_delay_seconds().
 
 0.1.1
 -----
