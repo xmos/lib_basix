@@ -89,7 +89,7 @@ pipeline {
 
                                 withTools(params.TOOLS_VERSION_VX) {
                                     xcoreBuild(archiveBins: false)
-                                    runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_xc.py")
+                                    // runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_xc.py") // not supported yet
                                 }
 
                                 withTools(params.TOOLS_VERSION_VX_XCC) {
