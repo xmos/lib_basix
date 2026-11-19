@@ -1,6 +1,11 @@
 lib_basix change log
 ====================
 
+UNRELEASED
+----------
+
+  * ADDED:   basix_delay_milliseconds().
+
 0.1.1
 -----
 

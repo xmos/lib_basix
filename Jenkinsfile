@@ -11,12 +11,17 @@ pipeline {
         string(
             name: 'TOOLS_VERSION_XS',
             defaultValue: '15.3.1',
-            description: 'XS XTC tools version'
+            description: 'XTC tools version'
         )
         string(
             name: 'TOOLS_VERSION_VX',
-            defaultValue: '-j --repo arch_vx_slipgate -b master -a XTC 131',
-            description: 'VX XTC tools version'
+            defaultValue: 'bob@develop',
+            description: 'VX tools version'
+        )
+        string(
+            name: 'TOOLS_VERSION_VX_XCC',
+            defaultValue: 'slipgate@master:143',
+            description: 'VX (XTC) tools version'
         )
         string(
             name: 'XMOSDOC_VERSION',
@@ -63,62 +68,32 @@ pipeline {
                     }
                 }
 
-                stage('Build XS') {
+                stage('Examples build') {
                     steps {
                         dir("${REPO_NAME}/examples") {
-                            xcoreBuild(
-                                toolsVersion: params.TOOLS_VERSION_XS,
-                                buildDir: 'build-xs',
-                                cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU316'
-                            )
+                            xcoreBuildAllArch()
                         }
                     }
                 }
 
-                stage('Test XS') {
+                stage('Tests') {
                     steps {
                         dir("${REPO_NAME}/tests") {
-                            xcoreBuild(
-                                toolsVersion: params.TOOLS_VERSION_XS,
-                                buildDir: 'build-xs',
-                                cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU316 -DBASIX_BUILD_XC_TESTS=ON',
-                                archiveBins: false
-                            )
-                            withTools(params.TOOLS_VERSION_XS) {
-                                createVenv(reqFile: 'requirements.txt')
-                                withVenv {
+                            createVenv(reqFile: "requirements.txt")
+                            withVenv {
+
+                                withTools(params.TOOLS_VERSION_XS) {
+                                    xcoreBuild(archiveBins: false, cmakeOpts: '-DBASIX_BUILD_XC_TESTS=ON')
                                     runPytest("--level=${params.TEST_LEVEL}")
                                 }
-                            }
-                        }
-                    }
-                }
 
-                stage('Build VX') {
-                    steps {
-                        dir("${REPO_NAME}/examples") {
-                            xcoreBuild(
-                                toolsVersion: params.TOOLS_VERSION_VX,
-                                buildDir: 'build-vx',
-                                cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU416'
-                            )
-                        }
-                    }
-                }
+                                withTools(params.TOOLS_VERSION_VX) {
+                                    xcoreBuild(archiveBins: false)
+                                    // runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_xc.py") // not supported yet
+                                }
 
-                stage('Test VX') {
-                    steps {
-                        dir("${REPO_NAME}/tests") {
-                            sh "find . -name '*.xe' -delete"
-                            xcoreBuild(
-                                toolsVersion: params.TOOLS_VERSION_VX,
-                                buildDir: 'build-vx',
-                                cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU416 -DBASIX_BUILD_XC_TESTS=OFF',
-                                archiveBins: false
-                            )
-                            withTools(params.TOOLS_VERSION_VX) {
-                                createVenv(reqFile: 'requirements.txt')
-                                withVenv {
+                                withTools(params.TOOLS_VERSION_VX_XCC) {
+                                    xcoreBuild(archiveBins: false, cmakeOpts: '-DAPP_HW_TARGET=XK-EVK-XU416')
                                     runPytest("--level=${params.TEST_LEVEL} --ignore=test_basix_xc.py")
                                 }
                             }
